@@ -1,5 +1,10 @@
-/* read csv file of items and bib numbers */
-/* create class to hold title, bib number and availability.
+import java.util*;
+
+/* *************************************************
+                       Classes
+   ************************************************* */
+
+/* item class to hold title, bib number and availability.
    availability is set to 0 initially */
 class item {
     private String name;
@@ -16,7 +21,36 @@ class item {
     public int getAvail() { return avail; }
 }
 
-/* create class to hold all items of a group */
+/* group class to hold all items of a certain type, i.e. Laptops */
 class group {
-    private list
+    private String name;
+    private List items;
+    private int num_items;
+
+    public group(String name) {
+        this.name = name;
+        this.items = new LinkedList();
+        this.num_items = 0;
+    }
+    public String getName() { return name; }
+    public LinkedList getItems() { return items; }
+    public int getNum_Items() { return num_items; }
 }
+
+/* *************************************************
+                     Initialize
+   ************************************************* */
+/* read csv file of names and bib numbers */
+/* create an group class for each group */
+/* create an item class for each item */
+
+/* *************************************************
+                   Get Avaliability
+   ************************************************* */
+
+
+
+/* *************************************************
+                    Make it Pretty
+   ************************************************* */
+
