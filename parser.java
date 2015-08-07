@@ -1,7 +1,8 @@
-import java.util*;
+import java.util.*;
+import java.io.*
 
 /* *************************************************
-                       Classes
+                      Data Classes
    ************************************************* */
 
 /* item class to hold title, bib number and availability.
@@ -38,12 +39,22 @@ class group {
 }
 
 /* *************************************************
-                     Initialize
+                     Initializers
    ************************************************* */
-/* read csv file of names and bib numbers */
-/* create an group class for each group */
-/* create an item class for each item */
+public class fileItems {
+    private LinkedList groups;
+    private int num_groups;
 
+    public fileItems() {
+        this.groups = new LinkedList();
+        this.num_items = 0;
+    }
+    public static void getItems() {
+        /* returns csv file of names and bib numbers */
+        /* create an group class for each group */
+        /* create an item class for each item */
+    }
+}
 /* *************************************************
                    Get Avaliability
    ************************************************* */
