@@ -1,6 +1,9 @@
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.lang.*;
+
+// additional package - simple-json
 import org.json.simple.*;
 
 /* *************************************************
@@ -22,6 +25,9 @@ class item {
     public String getName() { return name; }
     public String getBib() { return bib; }
     public int getAvail() { return avail; }
+    public void setAvail(int i) {
+        this.avail = i;
+    }
 }
 
 /* group class to hold all items of a certain type, i.e. Laptops */
@@ -126,18 +132,23 @@ class fileItems {
     }
 
     private void parse_bib_page(String bib_page, item curr_item){
-        // System.out.println(bib_page);
         Object obj = JSONValue.parse(bib_page);
+
         JSONArray array = (JSONArray)obj;
-        // JSONObject obj2=(JSONObject)array.get(1);
-        // System.out.println(obj2);
-        // System.out.println((JSONObject)array.get(2));
-        JSONObject curr_itm = null;
+
+        // need to rename this, but can't think of better name than item which 
+        // requires a rename of the group and item struct
+        JSONObject curr_itm = null; 
+        int available = 0;
+
         for (ListIterator items_itr = array.listIterator(); items_itr.hasNext();){
             curr_itm = (JSONObject)items_itr.next();
-            System.out.println(curr_itm);
+            if (curr_itm.get("available").toString().equals("true")){
+                available++;
+            }
         }
 
+        curr_item.setAvail(available);
     }
 
     public void getAvailability() {
@@ -145,22 +156,26 @@ class fileItems {
         item curr_item = null;
         String item_url = "";
         String item_page = "";
+
         for (ListIterator groups_itr = groups.listIterator(); groups_itr.hasNext();){
             curr_group = (group) groups_itr.next();
             System.out.println(curr_group.getName());
+
             for (ListIterator items_itr = curr_group.getItems().listIterator(); items_itr.hasNext();){
                 curr_item = (item) items_itr.next();
-                System.out.println(curr_item.getName());
                 item_url = base_url.concat(curr_item.getBib());
                 item_page = get_url(item_url);
                 parse_bib_page(item_page, curr_item);
+                System.out.println(curr_item.getName() +" : " + String.valueOf(curr_item.getAvail()));
             }
         }
     }
 
     public static void main(String[] args){
         fileItems f = new fileItems();
+
         f.fetchItems();
+
         f.getAvailability();
     }
 }
