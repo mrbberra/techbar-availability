@@ -1,5 +1,7 @@
 import java.util.*;
 import java.io.*;
+import java.net.*;
+import org.json.simple.*;
 
 /* *************************************************
                       Data Classes
@@ -95,14 +97,78 @@ class fileItems {
             System.err.println("IO Exception" + ioe.getMessage());
         }
     }
-}
+
 /* *************************************************
                    Get Avaliability
    ************************************************* */
+    private String base_url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=";
+    
+    private String get_url(String url_str){
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line;
+        StringBuilder page = new StringBuilder();
+        try {
+            url = new URL(url_str);
+            conn = (HttpURLConnection) url.openConnection();
+            rd = new BufferedReader (new InputStreamReader(conn.getInputStream()));
+            while ((line = rd.readLine()) != null){
+                page.append(line);
+            }
+            rd.close();
+        } catch (IOException ioe) {
+            System.err.println("IO Exception" + ioe.getMessage());
+        } catch (Exception e){
+            System.err.println("Exception" + e.getMessage());
+        }
+        return page.toString();
+    }
 
+    private void parse_bib_page(String bib_page, item curr_item){
+        // System.out.println(bib_page);
+        Object obj = JSONValue.parse(bib_page);
+        JSONArray array = (JSONArray)obj;
+        // JSONObject obj2=(JSONObject)array.get(1);
+        // System.out.println(obj2);
+        // System.out.println((JSONObject)array.get(2));
+        JSONObject curr_itm = null;
+        for (ListIterator items_itr = array.listIterator(); items_itr.hasNext();){
+            curr_itm = (JSONObject)items_itr.next();
+            System.out.println(curr_itm);
+        }
+
+    }
+
+    public void getAvailability() {
+        group curr_group = null;
+        item curr_item = null;
+        String item_url = "";
+        String item_page = "";
+        for (ListIterator groups_itr = groups.listIterator(); groups_itr.hasNext();){
+            curr_group = (group) groups_itr.next();
+            System.out.println(curr_group.getName());
+            for (ListIterator items_itr = curr_group.getItems().listIterator(); items_itr.hasNext();){
+                curr_item = (item) items_itr.next();
+                System.out.println(curr_item.getName());
+                item_url = base_url.concat(curr_item.getBib());
+                item_page = get_url(item_url);
+                parse_bib_page(item_page, curr_item);
+            }
+        }
+    }
+
+    public static void main(String[] args){
+        fileItems f = new fileItems();
+        f.fetchItems();
+        f.getAvailability();
+    }
+}
 
 
 /* *************************************************
                     Make it Pretty
    ************************************************* */
+
+
 
