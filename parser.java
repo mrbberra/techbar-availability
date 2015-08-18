@@ -22,10 +22,10 @@ class item {
         this.bib = bib;
         this.avail = 0;
     }
-    public String getName() { return name; }
-    public String getBib() { return bib; }
-    public int getAvail() { return avail; }
-    public void setAvail(int i) {
+    public String get_name() { return name; }
+    public String get_bib() { return bib; }
+    public int get_avail() { return avail; }
+    public void set_avail(int i) {
         this.avail = i;
     }
 }
@@ -42,11 +42,11 @@ class group {
         this.num_items = 0;
     }
 
-    public String getName() { return name; }
-    public LinkedList getItems() { return items; }
-    public int getNum_Items() { return num_items; }
+    public String get_name() { return name; }
+    public LinkedList get_items() { return items; }
+    public int get_num_items() { return num_items; }
 
-    public void addItem(item i) {
+    public void add_item(item i) {
         this.items.add(i);
         this.num_items += 1;
     }
@@ -55,24 +55,24 @@ class group {
 /* *************************************************
                      Initializers
    ************************************************* */
-class fileItems {
+class file_items {
     private LinkedList groups;
     private int num_groups;
 
-    public fileItems() {
+    public file_items() {
         this.groups = new LinkedList();
         this.num_groups = 0;
     }
     
-    public void addGroup(group g) {
+    public void add_group(group g) {
         this.groups.add(g);
         this.num_groups += 1;
     }
-    public LinkedList getGroups() { return groups; }
-    public int getNum_Groups() { return num_groups; }
+    public LinkedList get_group() { return groups; }
+    public int get_num_groups() { return num_groups; }
 
 
-    public void fetchItems() {
+    public void fetch_items() {
         /* read csv file of names and bib numbers */
         BufferedReader reader;
         String ln;
@@ -87,12 +87,12 @@ class fileItems {
                     /* create a group class for each group */
                     title = ln.substring(3,(ln.length()-3));
                     currGroup = new group(title);
-                    this.addGroup(currGroup);
+                    this.add_group(currGroup);
                 }
                 else {
                     /* create an item class for each item */
                     String[] parts = ln.split(",");
-                    currGroup.addItem(new item(parts[0],parts[1]));
+                    currGroup.add_item(new item(parts[0],parts[1]));
                 }
             }
         }
@@ -136,11 +136,12 @@ class fileItems {
 
         JSONArray array = (JSONArray)obj;
 
-        // need to rename this, but can't think of better name than item which 
-        // requires a rename of the group and item struct
+        /* need to rename this, but can't think of better name than item which 
+           requires a rename of the group and item struct */
         JSONObject curr_itm = null; 
         int available = 0;
 
+        /* iterates through list of objects and checks availability */
         for (ListIterator items_itr = array.listIterator(); items_itr.hasNext();){
             curr_itm = (JSONObject)items_itr.next();
             if (curr_itm.get("available").toString().equals("true")){
@@ -148,10 +149,10 @@ class fileItems {
             }
         }
 
-        curr_item.setAvail(available);
+        curr_item.set_avail(available);
     }
 
-    public void getAvailability() {
+    public void get_availability() {
         group curr_group = null;
         item curr_item = null;
         String item_url = "";
@@ -159,24 +160,24 @@ class fileItems {
 
         for (ListIterator groups_itr = groups.listIterator(); groups_itr.hasNext();){
             curr_group = (group) groups_itr.next();
-            System.out.println(curr_group.getName());
+            System.out.println(curr_group.get_name());
 
-            for (ListIterator items_itr = curr_group.getItems().listIterator(); items_itr.hasNext();){
+            for (ListIterator items_itr = curr_group.get_items().listIterator(); items_itr.hasNext();){
                 curr_item = (item) items_itr.next();
-                item_url = base_url.concat(curr_item.getBib());
+                item_url = base_url.concat(curr_item.get_bib());
                 item_page = get_url(item_url);
                 parse_bib_page(item_page, curr_item);
-                System.out.println(curr_item.getName() +" : " + String.valueOf(curr_item.getAvail()));
+                System.out.println(curr_item.get_name() +" : " + String.valueOf(curr_item.get_avail()));
             }
         }
     }
 
     public static void main(String[] args){
-        fileItems f = new fileItems();
+        file_items f = new file_items();
 
-        f.fetchItems();
+        f.fetch_items();
 
-        f.getAvailability();
+        f.get_availability();
     }
 }
 
