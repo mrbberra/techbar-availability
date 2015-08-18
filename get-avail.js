@@ -49,7 +49,7 @@ function createGroups() {
             {name:"Thunderbolt cable",bib:"8690269",avail:0,total:0,nextdue:[]},
             {name:"Apple USB to Ethernet adapter",bib:"8903640",avail:0,total:0,nextdue:[]},
             {name:"Apple Thunderbolt to Ethernet Adapter",bib:"10115654",avail:0,total:0,nextdue:[]}]}];
-    return gr
+    return grs
 }
 
 /*  makes XMLHttpRequest to get JSON response from server,
