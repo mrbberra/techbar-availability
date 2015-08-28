@@ -49,7 +49,7 @@ function createGroups() {
             {name:"Thunderbolt cable",bib:"8690269",avail:0,total:0,nextdue:[]},
             {name:"Apple USB to Ethernet adapter",bib:"8903640",avail:0,total:0,nextdue:[]},
             {name:"Apple Thunderbolt to Ethernet Adapter",bib:"10115654",avail:0,total:0,nextdue:[]}]}];
-    return grs
+    return grs;
 }
 
 /*  makes XMLHttpRequest to get JSON response from server,
@@ -59,32 +59,29 @@ function createGroups() {
     so the parsing might change
 */
 function getJSONfromURL(url) {
-    int avail,tot = 0;
+    var avail = 0,tot = 0;
     var xmlhttp = new XMLHttpRequest();
-    var xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
-            tot = response.length;
-            for(int i = 0; i < total; i++) {
+            for(var i = 0, tot = response.length; i < total; i++) {
                 if(response[i].available) {
                     ++avail;
                 }
             }
         }
-    }
-    return {available:avail,total=tot,dues=[]}
+    };
+    return {available:avail,total:tot,dues:[]};
 }
 
 
 /*  adds/updates availability for each item, gets called regularly  */
 function updateAvail(groups) {
-    int groupsLen = groups.length;
-    for(int i = 0; i < groupsLength; i++) {
+    for (var i = 0, len = groups.length; i < len; i++) {
         var currGroup = groups[i];
-        var currLen = currgroup.items.length;
-        for(int j = 0; j < currLen; j++) {
+        for(var j = 0; j < currGroup.items.length; j++) {
             currItem = currGroup.items[j];
-            String url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
+            var url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
             var response = getJSONfromURL(url);
             currItem.avail=response.available;
             currItem.total=response.total;
@@ -94,21 +91,34 @@ function updateAvail(groups) {
 }
 
 /*  sets up display  */
-/*
-function displayGroup(group) {
+
+function displayGroup(groups) {
+    var groupsEl = document.getElementById('groups-test');
+    var listEl;
+    for (var i = 0, len = groups.length; i < len; i++) {
+        listEl = document.createElement("li");
+        listEl.innerHTML = groups[i].group;
+        groupsEl.appendChild(listEl);
+        console.log(listEl);
+    }
 }
-*/
+
 
 /*  cycles between which group is displayed  */
 function changeGroup(groups) {
     var currGroup = groups[cycle];
-    //displayGroup(currGroup);
+    displayGroup(currGroup);
     ++cycle;
 }
 
-/*  all together now  */
-var allTheThings = createGroups()
-setInterval(updateAvail,60000,allTheThings); //update availability info every minute
-var cycle = 0;
-setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
+// /*  all together now  */
+// var allTheThings = createGroups()
+// setInterval(updateAvail,60000,allTheThings); //update availability info every minute
+// var cycle = 0;
+// setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
+
+var allTheThings = createGroups();
+updateAvail(allTheThings);
+displayGroup(allTheThings);
+
 
