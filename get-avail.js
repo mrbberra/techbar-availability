@@ -98,7 +98,7 @@ function displayGroup(groups) {
         var node, textnode;
         for (var i = 0, len = groups.length; i < len; i++) {
             node = document.createElement("li");
-            textnode = document.createTextNode(groups[i].group);
+            textnode = document.createTextNode(groups[i].group + groups[i].items[0].avail.toString());
             node.appendChild(textnode);
             groupsEl.appendChild(node);
         }
