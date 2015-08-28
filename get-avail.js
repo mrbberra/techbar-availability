@@ -93,13 +93,15 @@ function updateAvail(groups) {
 /*  sets up display  */
 
 function displayGroup(groups) {
-    var groupsEl = document.getElementById('groups-test');
-    var listEl;
-    for (var i = 0, len = groups.length; i < len; i++) {
-        listEl = document.createElement("li");
-        listEl.innerHTML = groups[i].group;
-        groupsEl.appendChild(listEl);
-        console.log(listEl);
+    var groupsEl = document.getElementById('groups-list');
+    if (groupsEl){
+        var node, textnode;
+        for (var i = 0, len = groups.length; i < len; i++) {
+            node = document.createElement("li");
+            textnode = document.createTextNode(groups[i].group);
+            node.appendChild(textnode);
+            groupsEl.appendChild(node);
+        }
     }
 }
 
@@ -117,8 +119,10 @@ function changeGroup(groups) {
 // var cycle = 0;
 // setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
 
-var allTheThings = createGroups();
-updateAvail(allTheThings);
-displayGroup(allTheThings);
+window.onload = function() {
+    var allTheThings = createGroups();
+    updateAvail(allTheThings);
+    displayGroup(allTheThings);
+}
 
 
