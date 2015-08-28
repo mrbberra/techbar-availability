@@ -59,32 +59,29 @@ function createGroups() {
     so the parsing might change
 */
 function getJSONfromURL(url) {
-    int avail,tot = 0;
+    var avail = 0,tot = 0;
     var xmlhttp = new XMLHttpRequest();
-    var xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
-            tot = response.length;
-            for(int i = 0; i < total; i++) {
+            for(var i = 0, tot = response.length; i < total; i++) {
                 if(response[i].available) {
                     ++avail;
                 }
             }
         }
-    }
-    return {available:avail,total=tot,dues=[]}
+    };
+    return {available:avail,total:tot,dues:[]};
 }
 
 
 /*  adds/updates availability for each item, gets called regularly  */
 function updateAvail(groups) {
-    int groupsLen = groups.length;
-    for(int i = 0; i < groupsLength; i++) {
+    for (var i = 0, len = groups.length; i < len; i++) {
         var currGroup = groups[i];
-        var currLen = currgroup.items.length;
-        for(int j = 0; j < currLen; j++) {
+        for(var j = 0; j < currGroup.items.length; j++) {
             currItem = currGroup.items[j];
-            String url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
+            var url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
             var response = getJSONfromURL(url);
             currItem.avail=response.available;
             currItem.total=response.total;
@@ -94,21 +91,38 @@ function updateAvail(groups) {
 }
 
 /*  sets up display  */
-/*
-function displayGroup(group) {
+
+function displayGroup(groups) {
+    var groupsEl = document.getElementById('groups-list');
+    if (groupsEl){
+        var node, textnode;
+        for (var i = 0, len = groups.length; i < len; i++) {
+            node = document.createElement("li");
+            textnode = document.createTextNode(groups[i].group);
+            node.appendChild(textnode);
+            groupsEl.appendChild(node);
+        }
+    }
 }
-*/
+
 
 /*  cycles between which group is displayed  */
 function changeGroup(groups) {
     var currGroup = groups[cycle];
-    //displayGroup(currGroup);
+    displayGroup(currGroup);
     ++cycle;
 }
 
-/*  all together now  */
-var allTheThings = createGroups()
-setInterval(updateAvail,60000,allTheThings); //update availability info every minute
-var cycle = 0;
-setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
+// /*  all together now  */
+// var allTheThings = createGroups()
+// setInterval(updateAvail,60000,allTheThings); //update availability info every minute
+// var cycle = 0;
+// setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
+
+window.onload = function() {
+    var allTheThings = createGroups();
+    updateAvail(allTheThings);
+    displayGroup(allTheThings);
+}
+
 
