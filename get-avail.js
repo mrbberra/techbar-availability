@@ -64,13 +64,16 @@ function getJSONfromURL(url) {
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
-            for(var i = 0, tot = response.length; i < total; i++) {
+            for(var i = 0, tot = response.length; i < tot; i++) {
                 if(response[i].available) {
                     ++avail;
                 }
             }
         }
     };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+
     return {available:avail,total:tot,dues:[]};
 }
 
@@ -108,7 +111,7 @@ function displayGroup(groups) {
 
             for (var j = 0, iLen = groups[i].items.length; j < iLen; j++) {
                 innerNode = document.createElement("li");
-                innerTextNode = document.createTextNode(groups[i].items[j].name);
+                innerTextNode = document.createTextNode(groups[i].items[j].name + " : " + groups[i].items[j].avail);
                 innerNode.appendChild(innerTextNode);
                 groupEl.appendChild(innerNode);
             }
