@@ -98,7 +98,7 @@ function displayGroup(groups) {
     if (groupsEl){
         var node, textnode, groupId, innerNode, innerTextNode;
         for (var i = 0, len = groups.length; i < len; i++) {
-            node = document.createElement("li");
+            node = document.createElement("div");
             groupId = "group-list-" + i.toString();
             node.setAttribute("id", groupId);
             textnode = document.createTextNode(groups[i].group);
@@ -106,11 +106,11 @@ function displayGroup(groups) {
             groupsEl.appendChild(node);
             groupEl = document.getElementById(groupId);
 
-            for (var j = 0, iLen = groups.items.length; j < iLen; j++) {
+            for (var j = 0, iLen = groups[i].items.length; j < iLen; j++) {
                 innerNode = document.createElement("li");
-                innerTextNode = document.createTextNode(groups.items[i].name);
+                innerTextNode = document.createTextNode(groups[i].items[j].name);
                 innerNode.appendChild(innerTextNode);
-                groupEL.appendChild(innerNode);
+                groupEl.appendChild(innerNode);
             }
         }
     }
