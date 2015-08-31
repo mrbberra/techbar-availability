@@ -65,6 +65,7 @@ function getJSONfromURL(url) {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
             for(var i = 0, tot = response.length; i < tot; i++) {
+                console.log("in for loop");
                 if(response[i].available) {
                     ++avail;
                 }
@@ -101,11 +102,10 @@ function displayGroup(groups) {
     if (groupsEl){
         var node, textnode, groupId, innerNode, innerTextNode;
         for (var i = 0, len = groups.length; i < len; i++) {
-            node = document.createElement("div");
+             node = document.createElement("div");
             groupId = "group-list-" + i.toString();
             node.setAttribute("id", groupId);
-            textnode = document.createTextNode(groups[i].group);
-            node.appendChild(textnode);
+            node.innerHTML = groups[i].group;
             groupsEl.appendChild(node);
             groupEl = document.getElementById(groupId);
 
