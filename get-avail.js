@@ -94,13 +94,24 @@ function updateAvail(groups) {
 
 function displayGroup(groups) {
     var groupsEl = document.getElementById('groups-list');
+    var groupEl;
     if (groupsEl){
-        var node, textnode;
+        var node, textnode, groupId, innerNode, innerTextNode;
         for (var i = 0, len = groups.length; i < len; i++) {
             node = document.createElement("li");
-            textnode = document.createTextNode(groups[i].group + groups[i].items[0].avail.toString());
+            groupId = "group-list-" + i.toString();
+            node.setAttribute("id", groupId);
+            textnode = document.createTextNode(groups[i].group);
             node.appendChild(textnode);
             groupsEl.appendChild(node);
+            groupEl = document.getElementById(groupId);
+
+            for (var j = 0, iLen = groups.items.length; j < iLen; j++) {
+                innerNode = document.createElement("li");
+                innerTextNode = document.createTextNode(groups.items[i].name);
+                innerNode.appendChild(innerTextNode);
+                groupEL.appendChild(innerNode);
+            }
         }
     }
 }
