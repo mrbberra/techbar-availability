@@ -77,8 +77,6 @@ function getJSONfromURL(url, groupId, itemId) {
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-
-    //return {available:avail,total:tot,dues:[]};
 }
 
 
@@ -90,9 +88,6 @@ function updateAvail(groups) {
             currItem = currGroup.items[j];
             var url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
             var response = getJSONfromURL(url, i, j);
-            //currItem.avail=response.available;
-            //currItem.total=response.total;
-            //currItem.nextdue=response.dues;
         }
     }
 }
