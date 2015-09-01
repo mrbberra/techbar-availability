@@ -61,8 +61,10 @@ function createGroups() {
 function getJSONfromURL(url) {
     var avail = 0,tot = 0;
     var xmlhttp = new XMLHttpRequest();
+    console.log(xmlhttp.readyState);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            console.log("fuck");
             var response = JSON.parse(xmlhttp.responseText);
             for(var i = 0, tot = response.length; i < total; i++) {
                 if(response[i].available) {
@@ -71,6 +73,8 @@ function getJSONfromURL(url) {
             }
         }
     };
+    xmlhttp.open("GET",url,true);
+    xmlhttp.send();
     return {available:avail,total:tot,dues:[]};
 }
 
