@@ -58,24 +58,27 @@ function createGroups() {
     also, right now we are working with a JSON feed that is buggy,
     so the parsing might change
 */
-function getJSONfromURL(url) {
+function getJSONfromURL(url, groupId, itemId) {
     var avail = 0,tot = 0;
+    var itemEl;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
             for(var i = 0, tot = response.length; i < tot; i++) {
-                console.log("in for loop");
                 if(response[i].available) {
                     ++avail;
                 }
             }
+            itemEl = document.getElementById("item-list-" + groupId.toString() + "-" + itemId.toString());
+            itemEl.children[0].children[0].innerHTML = "Available : " + avail;
+            itemEl.children[0].children[1].innerHTML = "Total : " + tot;
         }
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
 
-    return {available:avail,total:tot,dues:[]};
+    //return {available:avail,total:tot,dues:[]};
 }
 
 
@@ -86,10 +89,10 @@ function updateAvail(groups) {
         for(var j = 0; j < currGroup.items.length; j++) {
             currItem = currGroup.items[j];
             var url = "http://www.lib.uchicago.edu/public/copyavailability/?bib=" + currItem.bib;
-            var response = getJSONfromURL(url);
-            currItem.avail=response.available;
-            currItem.total=response.total;
-            currItem.nextdue=response.dues;
+            var response = getJSONfromURL(url, i, j);
+            //currItem.avail=response.available;
+            //currItem.total=response.total;
+            //currItem.nextdue=response.dues;
         }
     }
 }
@@ -100,9 +103,9 @@ function displayGroup(groups) {
     var groupsEl = document.getElementById('groups-list');
     var groupEl;
     if (groupsEl){
-        var node, textnode, groupId, innerNode, innerTextNode;
+        var node, groupId, innerNode, itemInfo, itemId;
         for (var i = 0, len = groups.length; i < len; i++) {
-             node = document.createElement("div");
+            node = document.createElement("div");
             groupId = "group-list-" + i.toString();
             node.setAttribute("id", groupId);
             node.innerHTML = groups[i].group;
@@ -111,8 +114,11 @@ function displayGroup(groups) {
 
             for (var j = 0, iLen = groups[i].items.length; j < iLen; j++) {
                 innerNode = document.createElement("li");
-                innerTextNode = document.createTextNode(groups[i].items[j].name + " : " + groups[i].items[j].avail);
-                innerNode.appendChild(innerTextNode);
+                itemId = "item-list-" + i.toString() + "-" + j.toString();
+                innerNode.setAttribute("id", itemId);
+                innerNode.innerHTML = groups[i].items[j].name + 
+                                    "<ul><li>" + "Available : " + groups[i].items[j].avail + "</li>" +
+                                    "<li>" + "Total : " + groups[i].items[j].total + "</li></ul>";
                 groupEl.appendChild(innerNode);
             }
         }
@@ -135,8 +141,8 @@ function changeGroup(groups) {
 
 window.onload = function() {
     var allTheThings = createGroups();
-    updateAvail(allTheThings);
     displayGroup(allTheThings);
+    updateAvail(allTheThings);
 }
 
 
