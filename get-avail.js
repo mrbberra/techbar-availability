@@ -65,7 +65,6 @@ function getJSONfromURL(url, groupId, itemId) {
     console.log(xmlhttp.readyState);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            console.log("fuck");
             var response = JSON.parse(xmlhttp.responseText);
             for(var i = 0, tot = response.length; i < tot; i++) {
                 if(response[i].available) {
@@ -100,23 +99,45 @@ function displayGroup(groups) {
     var groupsEl = document.getElementById('groups-list');
     var groupEl;
     if (groupsEl){
-        var node, groupId, innerNode, itemInfo, itemId;
+        var anode, fnode, lnode, snode, dnode, node, groupId, innerNode, itemInfo, itemId;
         for (var i = 0, len = groups.length; i < len; i++) {
-            node = document.createElement("div");
-            groupId = "group-list-" + i.toString();
-            node.setAttribute("id", groupId);
-            node.innerHTML = groups[i].group;
-            groupsEl.appendChild(node);
+            // set up divs n shit for css
             groupEl = document.getElementById(groupId);
+            fnode = document.createElement("fieldset");
+            fnode.setAttribute("class", "collapse-text-fieldset collapsible collapsed form-wrapper collapse-processed");
+            
+            lnode = document.createElement("legend");
+
+            groupId = "group-list-" + i.toString();
+            snode = document.createElement("span");
+            snode.setAttribute("class", "fieldset-legend");
+            
+            anode = document.createElement("a");
+            anode.setAttribute("class", "fieldset-title");
+            anode.setAttribute("id", groupId);
+            anode.innerHTML = groups[i].group;
+            
+            dnode = document.createElement("div");
+            dnode.setAttribute("class", "fieldset-wrapper");i
+            fnode.appendChild(dnode);
+
+            node = document.createElement("div");
+            node.setAttribute("class", "collapse-text-text");
+
+            snode.appendChild(anode);
+            fnode.appendChild(lnode);
+            dnode.appendChild(node);
+            lnode.appendChild(snode);
+            fnode.appendChild(dnode);
+            groupsEl.appendChild(fnode);
 
             for (var j = 0, iLen = groups[i].items.length; j < iLen; j++) {
                 innerNode = document.createElement("li");
                 itemId = "item-list-" + i.toString() + "-" + j.toString();
                 innerNode.setAttribute("id", itemId);
                 innerNode.innerHTML = groups[i].items[j].name + 
-                                    "<ul><li>" + "Available : " + groups[i].items[j].avail + "</li>" +
-                                    "<li>" + "Total : " + groups[i].items[j].total + "</li></ul>";
-                groupEl.appendChild(innerNode);
+                                    "<ul><li>" + "Available : " + groups[i].items[j].avail + "</li></ul>";
+                node.appendChild(innerNode);
             }
         }
     }
