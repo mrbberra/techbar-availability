@@ -17,6 +17,7 @@
     sets availability to 0 for everything for now
     commented items will be properly added when i get the bib numbers
 */
+
 function createGroups() {
     var grs =
         [{group:"Laptops and iPads",items:[
@@ -62,7 +63,6 @@ function getJSONfromURL(url, groupId, itemId) {
     var avail = 0,tot = 0;
     var itemEl;
     var xmlhttp = new XMLHttpRequest();
-    console.log(xmlhttp.readyState);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = JSON.parse(xmlhttp.responseText);
@@ -73,7 +73,6 @@ function getJSONfromURL(url, groupId, itemId) {
             }
             itemEl = document.getElementById("item-list-" + groupId.toString() + "-" + itemId.toString());
             itemEl.children[0].children[0].innerHTML = "Available : " + avail;
-            itemEl.children[0].children[1].innerHTML = "Total : " + tot;
         }
     };
     xmlhttp.open("GET", url, true);
@@ -105,6 +104,7 @@ function displayGroup(groups) {
             groupEl = document.getElementById(groupId);
             fnode = document.createElement("fieldset");
             fnode.setAttribute("class", "collapse-text-fieldset collapsible collapsed form-wrapper collapse-processed");
+            fnode.setAttribute("onclick", "Drupal.toggleFieldset(this)");
             
             lnode = document.createElement("legend");
 
@@ -118,8 +118,7 @@ function displayGroup(groups) {
             anode.innerHTML = groups[i].group;
             
             dnode = document.createElement("div");
-            dnode.setAttribute("class", "fieldset-wrapper");i
-            fnode.appendChild(dnode);
+            dnode.setAttribute("class", "fieldset-wrapper");
 
             node = document.createElement("div");
             node.setAttribute("class", "collapse-text-text");
