@@ -1,20 +1,19 @@
 /*  creates a js object organizing items by group/classification
-    each item includes: name, bib number, number of items available,
-                        total number of items, and approaching due times
+    each item includes: name, bib number
     ie: "Laptops"
-            - "Macbook Air MS2","8513330","5"
+            - "Macbook Air MS2","8513330"
             ...
         "Chargers"
-            - "2-hour MS1 Adapter","8509957","3"
+            - "2-hour MS1 Adapter","8509957"
             ...
         ...
     first we get all the groups, names, and bib numbers,
-    then we use that to get and update the availability.
+    then we use that to make requests and parse the ReSTful
+    responses to get and update the availability.
 */
 
 
 /*  creating the data arrays: its ugly and im sorry
-    sets availability to 0 for everything for now
     commented items will be properly added when i get the bib numbers
 */
 
@@ -54,8 +53,8 @@ function createGroups() {
 }
 
 /*  makes XMLHttpRequest to get JSON response from server,
-    returns object with current availability, total num items, and next 3 due dates
-    well right now it doesnt do due dates but it will soon!
+    updates html for specific item's listing on page
+    things we might add: next due times?
     also, right now we are working with a JSON feed that is buggy,
     so the parsing might change
 */
@@ -82,7 +81,7 @@ function getJSONfromURL(url, groupId, itemId) {
 }
 
 
-/*  adds/updates availability for each item, gets called regularly  */
+/*  calls the getJSON function for every item, gets called regularly  */
 function updateAvail(groups) {
     for (var i = 0, len = groups.length; i < len; i++) {
         var currGroup = groups[i];
@@ -94,8 +93,9 @@ function updateAvail(groups) {
     }
 }
 
-/*  sets up display  */
 
+/*  sets up display
+    ~~~ ui is my passion ( ͡° ͜ʖ ͡°) ~~~  */
 function displayGroup(groups) {
     var groupsEl = document.getElementById('groups-list');
     var groupEl;
