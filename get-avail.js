@@ -21,35 +21,35 @@
 function createGroups() {
     var grs =
         [{group:"Laptops and iPads",items:[
-            //{name:"Macbook Air MS1",bib:"",avail:0,total:0,nextdue:[]},
-            //{name:"Macbook Pro",bib:"",avail:0,total:0,nextdue:[]},
-            {name:"Macbook Air MS2",bib:"8513330",avail:0,total:0,nextdue:[]},
-            {name:"Dell XPS",bib:"8948289",avail:0,total:0,nextdue:[]},
-            {name:"iPad",bib:"8966833",avail:0,total:0,nextdue:[]}]},
+            //{name:"Macbook Air MS1",bib:""},
+            //{name:"Macbook Pro",bib:""},
+            {name:"Macbook Air MS2",bib:"8513330"},
+            {name:"Dell XPS",bib:"8948289"},
+            {name:"iPad",bib:"8966833"}]},
          {group:"2-hour Chargers",items:[
-            {name:"2-hour MS1 Adapter",bib:"8509957",avail:0,total:0,nextdue:[]},
-            {name:"2-hour MS2 Adapter",bib:"9864660",avail:0,total:0,nextdue:[]},
-            {name:"Mini-USB charger",bib:"8920736",avail:0,total:0,nextdue:[]},
-            {name:"Micro-USB charger",bib:"8916813",avail:0,total:0,nextdue:[]},
-            {name:"Apple Lightning charger",bib:"8968294",avail:0,total:0,nextdue:[]}]},
-            //{name:"Universal PC Adapter",bib:"",avail:0,total:0,nextdue:[]},
+            {name:"2-hour MS1 Adapter",bib:"8509957"},
+            {name:"2-hour MS2 Adapter",bib:"9864660"},
+            {name:"Mini-USB charger",bib:"8920736"},
+            {name:"Micro-USB charger",bib:"8916813"},
+            {name:"Apple Lightning charger",bib:"8968294"}]},
+            //{name:"Universal PC Adapter",bib:""},
          {group:"Video Adapters and Cables",items:[
-            {name:"HDMI cable",bib:"8690270",avail:0,total:0,nextdue:[]},
-            {name:"USB to VGA",bib:"8509852",avail:0,total:0,nextdue:[]},
-            {name:"Mini DisplayPort to HDMI",bib:"8509847",avail:0,total:0,nextdue:[]},
-            {name:"Mini DVI to VGA",bib:"8509108",avail:0,total:0,nextdue:[]},
-            {name:"Universal DisplayPort to HDMI",bib:"10108672",avail:0,total:0,nextdue:[]},
-            {name:"PC DisplayPort to HDMI",bib:"10108673",avail:0,total:0,nextdue:[]},
-            {name:"PC DisplayPort to VGA",bib:"10108674",avail:0,total:0,nextdue:[]}]},
+            {name:"HDMI cable",bib:"8690270"},
+            {name:"USB to VGA",bib:"8509852"},
+            {name:"Mini DisplayPort to HDMI",bib:"8509847"},
+            {name:"Mini DVI to VGA",bib:"8509108"},
+            {name:"Universal DisplayPort to HDMI",bib:"10108672"},
+            {name:"PC DisplayPort to HDMI",bib:"10108673"},
+            {name:"PC DisplayPort to VGA",bib:"10108674"}]},
          {group:"Data Cables",items:[
-            {name:"Ethernet cable 25ft",bib:"8516685",avail:0,total:0,nextdue:[]},
-            {name:"Ethernet cable 10ft",bib:"8516696",avail:0,total:0,nextdue:[]},
-            {name:"FireWire 800",bib:"8532264",avail:0,total:0,nextdue:[]},
-            {name:"FireWire 400",bib:"8920709",avail:0,total:0,nextdue:[]},
-            {name:"FireWire 800/400 adapter",bib:"8532262",avail:0,total:0,nextdue:[]},
-            {name:"Thunderbolt cable",bib:"8690269",avail:0,total:0,nextdue:[]},
-            {name:"Apple USB to Ethernet adapter",bib:"8903640",avail:0,total:0,nextdue:[]},
-            {name:"Apple Thunderbolt to Ethernet Adapter",bib:"10115654",avail:0,total:0,nextdue:[]}]}];
+            {name:"Ethernet cable 25ft",bib:"8516685"},
+            {name:"Ethernet cable 10ft",bib:"8516696"},
+            {name:"FireWire 800",bib:"8532264"},
+            {name:"FireWire 400",bib:"8920709"},
+            {name:"FireWire 800/400 adapter",bib:"8532262"},
+            {name:"Thunderbolt cable",bib:"8690269"},
+            {name:"Apple USB to Ethernet adapter",bib:"8903640"},
+            {name:"Apple Thunderbolt to Ethernet Adapter",bib:"10115654"}]}];
     return grs;
 }
 
@@ -72,7 +72,9 @@ function getJSONfromURL(url, groupId, itemId) {
                 }
             }
             itemEl = document.getElementById("item-list-" + groupId.toString() + "-" + itemId.toString());
+            
             itemEl.children[0].children[0].innerHTML = "Available : " + avail;
+
         }
     };
     xmlhttp.open("GET", url, true);
@@ -131,35 +133,22 @@ function displayGroup(groups) {
             groupsEl.appendChild(fnode);
 
             for (var j = 0, iLen = groups[i].items.length; j < iLen; j++) {
-                innerNode = document.createElement("li");
+                innerNode = document.createElement("tr");
                 itemId = "item-list-" + i.toString() + "-" + j.toString();
                 innerNode.setAttribute("id", itemId);
-                innerNode.innerHTML = groups[i].items[j].name + 
-                                    "<ul><li>" + "Available : " + groups[i].items[j].avail + "</li></ul>";
-                node.appendChild(innerNode);
+                innerNode.innerHTML = groups[i].items[j].name + "<ul><li>Available : - </li></ul>";
+                node.appendChild(innerNode); 
             }
         }
     }
 }
 
-
-/*  cycles between which group is displayed  */
-function changeGroup(groups) {
-    var currGroup = groups[cycle];
-    displayGroup(currGroup);
-    ++cycle;
-}
-
-// /*  all together now  */
-// var allTheThings = createGroups()
-// setInterval(updateAvail,60000,allTheThings); //update availability info every minute
-// var cycle = 0;
-// setInterval(changeGroup,15000,allTheThings); //change which group is displayed every 15 seconds
-
-window.onload = function() {
+jQuery(document).ready(function() {
     var allTheThings = createGroups();
     displayGroup(allTheThings);
     updateAvail(allTheThings);
-}
+    setInterval(updateAvail, 45000, allTheThings); /* updates every 45 seconds */
+});
+
 
 
